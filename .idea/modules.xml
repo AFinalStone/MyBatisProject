@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/01ResultType_ResultMap/01ResultType_ResultMap.iml" filepath="$PROJECT_DIR$/01ResultType_ResultMap/01ResultType_ResultMap.iml" />
+      <module fileurl="file://$PROJECT_DIR$/02延时加载/02延时加载.iml" filepath="$PROJECT_DIR$/02延时加载/02延时加载.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/BatisProject.iml" filepath="$PROJECT_DIR$/.idea/BatisProject.iml" />
+    </modules>
+  </component>
+</project>

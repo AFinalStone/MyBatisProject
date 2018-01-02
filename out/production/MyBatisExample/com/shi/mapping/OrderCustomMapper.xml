@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 为这个mapper指定一个唯一的namespace，namespace的值习惯上设置成包名+sql映射文件名，这样就能够保证namespace的值是唯一的
+例如namespace="com.shi.mapping.userMapper"就是com.shi.mapping(包名)+userMapper(userMapper.xml文件去除后缀)
+ -->
+<mapper namespace="com.shi.mapping.OrderCustomI">
+
+    <!--订单信息加用户信息-->
+    <resultMap id="resultMapOrder" type="com.shi.pojo.OrderResultMap">
+        <id column="id" property="id"/>
+        <result column="number" property="number"/>
+        <result column="note" property="note"/>
+        <!--用户信息-->
+        <association property="user" javaType="com.shi.bean.User">
+            <id column="user_id" property="id"/>
+            <result column="username" property="username"/>
+            <result column="address" property="address"/>
+        </association>
+    </resultMap>
+
+    <!--订单信息加用户信息加订单详情信息-->
+    <resultMap id="resultMapOrder02" type="com.shi.pojo.OrderResultMap02" extends="resultMapOrder">
+        <!-- 上面使用了extends继承了resultMapOrder，所以这里不需要再配置order和user的属性信息-->
+        <!--订单明细属性信息-->
+        <collection property="listData" ofType="com.shi.bean.OrderDetail">
+            <id column="id" property="id"/>
+            <result column="orders_id" property="orders_id"/>
+            <result column="item_id" property="item_id"/>
+            <result column="item_num" property="item_num"/>
+        </collection>
+    </resultMap>
+
+    <!--订单信息加用户信息加订单详情信息-->
+    <resultMap id="resultMapUser" type="com.shi.pojo.UserResultMap">
+        <!-- 用户信息 -->
+        <id column="user_id" property="id"/>
+        <result column="username" property="username"/>
+        <result column="address" property="address"/>
+        <!--订单信息-->
+        <collection property="listData" ofType="com.shi.pojo.UserOrder">
+            <id column="id" property="id"/>
+            <result column="number" property="number"/>
+            <result column="user_id" property="user_id"/>
+            <result column="note" property="note"/>
+
+            <collection property="listData" ofType="com.shi.pojo.UserOrderDetail">
+                <id column="id" property="id"/>
+                <result column="orders_id" property="orders_id"/>
+                <result column="item_id" property="item_id"/>
+                <result column="item_num" property="item_num"/>
+                <association property="listData" javaType="com.shi.bean.Item">
+                    <id column="id" property="id"/>
+                    <result column="name" property="name"/>
+                    <result column="price" property="price"/>
+                </association>
+            </collection>
+        </collection>
+    </resultMap>
+    <!--使用resultType查询订单信息-->
+    <select id="findAllOrdersByResultType" resultType="com.shi.bean.Order">
+        select * from order_
+    </select>
+    <!--使用resultType查询订单以及和订单相关联的用户信息-->
+    <select id="findOrdersByResultTypeUser" resultType="com.shi.pojo.OrderCustom">
+      SELECT order_.*, user.`username`, user.`sex`, user.address FROM order_,USER WHERE order_.`user_id` = user.`id`
+    </select>
+    <!--使用resultMap查询订单以及和订单相关联的用户信息-->
+    <select id="findOrdersByResultMapOrder" resultMap="resultMapOrder">
+        SELECT order_.*, user.`username`, user.`sex`, user.address FROM order_,USER WHERE order_.`user_id` = user.`id`
+    </select>
+    <!--使用resultMap查询订单，订单相关联的用户信息，以及订单详情-->
+    <select id="findOrdersByResultMapOrder02" resultMap="resultMapOrder02">
+        SELECT order_.*, user.`username`, user.`sex`, user.address, order_detail.* FROM order_,USER,order_detail WHERE order_.`user_id` = user.`id`
+    </select>
+    <!--查询用户及用户购买的商品数量-->
+    <select id="findOrdersByResultMapUser" resultMap="resultMapUser">
+        SELECT order_.*
+        , user.`username`
+        , user.`sex`
+        , user.address
+        , order_detail.*
+        , items.*
+        FROM order_, USER, order_detail, items
+        WHERE order_.user_id = user.id AND order_detail.orders_id = order_.id AND order_detail.item_id = items.id
+    </select>
+</mapper>
