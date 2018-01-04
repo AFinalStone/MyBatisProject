@@ -83,7 +83,7 @@ public interface OrderCustomI {
 }
 ```
 ```xml
-<mapper namespace="com.shi.mapping.OrderCustomI">
+<mapper namespace="com.shi.mapping.UserMapperI">
     <!--订单信息加用户信息-->
     <resultMap id="resultMapOrder" type="com.shi.pojo.OrderResultMap">
         <id column="id" property="id"/>
@@ -132,7 +132,7 @@ public interface OrderCustomI {
 ```
 需要使用的resultMap对象：
 ```xml
-<mapper namespace="com.shi.mapping.OrderCustomI">
+<mapper namespace="com.shi.mapping.UserMapperI">
     <!--订单信息   加用户信息  加订单详情信息-->
     <resultMap id="resultMapOrder02" type="com.shi.pojo.OrderResultMap02" extends="resultMapOrder">
         <!-- 上面使用了extends继承了resultMapOrder，所以这里不需要再配置order和user的属性信息-->
@@ -161,7 +161,7 @@ public interface OrderCustomI {
 ```
 
 ```xml
-<mapper namespace="com.shi.mapping.OrderCustomI">
+<mapper namespace="com.shi.mapping.UserMapperI">
     <!--订单信息   加用户信息  加订单详情信息-->
     <resultMap id="resultMapUser" type="com.shi.pojo.UserResultMap">
         <!-- 用户信息 -->

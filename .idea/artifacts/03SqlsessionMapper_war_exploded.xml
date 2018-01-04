@@ -1,0 +1,13 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="03Sqlsession和Mapper的缓存:war exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/03SqlsessionMapper_war_exploded</output-path>
+    <root id="root">
+      <element id="javaee-facet-resources" facet="03Sqlsession和Mapper的缓存/web/Web" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="03Sqlsession和Mapper的缓存" />
+        </element>
+      </element>
+    </root>
+  </artifact>
+</component>

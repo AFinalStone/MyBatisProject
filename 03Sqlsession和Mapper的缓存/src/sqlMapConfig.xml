@@ -7,9 +7,11 @@
 
     <settings>
         <!--是否开启懒加载-->
-        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
         <!--是否开启积极加载-->
         <setting name="aggressiveLazyLoading" value="false"/>
+        <!--是否开启二级缓存-->
+        <setting name="cacheEnabled" value="true"/>
     </settings>
     <!--
         development : 开发模式
@@ -31,7 +33,7 @@
 
 
     <mappers>
-        <mapper resource="com/shi/mapping/OrderCustomMapper.xml"/>
+        <mapper resource="com/shi/mapping/UserMapper.xml"/>
     </mappers>
 
 </configuration>

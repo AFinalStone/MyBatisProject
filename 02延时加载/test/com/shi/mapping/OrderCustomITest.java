@@ -1,6 +1,5 @@
 package com.shi.mapping;
 
-import com.shi.bean.Order;
 import com.shi.bean.User;
 import com.shi.mybatis.MyBatisUtil;
 import com.shi.pojo.OrderResultMap;
@@ -22,15 +21,6 @@ public class OrderCustomITest {
     @After
     public void tearDown() throws Exception {
         sqlSession.close();
-    }
-
-    @Test
-    public void findUserById() {
-        OrderCustomI orderCustomI = sqlSession.getMapper(OrderCustomI.class);
-        List<User> listData = orderCustomI.findUserById(2);
-        for (User user:listData) {
-            System.out.println(user.toString());
-        }
     }
 
     @Test

@@ -6,7 +6,9 @@
     <properties resource="db.properties"/>
 
     <settings>
+        <!--是否开启懒加载-->
         <setting name="lazyLoadingEnabled" value="true"/>
+        <!--是否开启积极加载-->
         <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
     <!--
@@ -26,7 +28,6 @@
             </dataSource>
         </environment>
     </environments>
-
 
 
     <mappers>

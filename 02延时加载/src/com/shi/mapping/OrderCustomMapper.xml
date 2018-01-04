@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- 为这个mapper指定一个唯一的namespace，namespace的值习惯上设置成包名+sql映射文件名，这样就能够保证namespace的值是唯一的
-例如namespace="com.shi.mapping.userMapper"就是com.shi.mapping(包名)+userMapper(userMapper.xml文件去除后缀)
- -->
-<mapper namespace="com.shi.mapping.OrderCustomI">
+<mapper namespace="com.shi.mapping.UserMapperI">
 
     <!--订单信息加用户信息-->
     <resultMap id="OrderUserlazyLoadingResultMap" type="com.shi.pojo.OrderResultMap">
 
-        <id column="id" property="id"/>
-        <result column="user_id" property="user_id"/>
-        <result column="number" property="number"/>
-        <result column="note" property="note"/>
+        <id column="id" property="ID"/>
+        <result column="user_id" property="userID"/>
+        <result column="number" property="mNumber"/>
+        <result column="note" property="mNote"/>
         <!-- 实现对用户信息的延时加载
         select：指定延迟加载需要执行的statement的ID（是根据user_id查询用户信息的statement）
         column：订单信息中关联用户信息查询的列，是user_id,关联查询的sql理解为：
@@ -21,7 +18,7 @@
             FROM orders
         -->
         <!--用户信息-->
-        <association property="user" javaType="com.shi.bean.User" select="com.shi.mapping.OrderCustomI.findUserById" column="user_id">
+        <association property="mUser" javaType="com.shi.bean.User" select="com.shi.mapping.UserMapperI.findUserById" column="user_id">
 
         </association>
     </resultMap>

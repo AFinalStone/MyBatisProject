@@ -11,13 +11,4 @@ public class User {
     private char sex;
     private String address;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", sex=" + sex +
-                ", address='" + address + '\'' +
-                '}';
-    }
 }

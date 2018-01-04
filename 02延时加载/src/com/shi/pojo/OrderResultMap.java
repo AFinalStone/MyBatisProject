@@ -1,57 +1,43 @@
 package com.shi.pojo;
 
-import com.shi.bean.Order;
 import com.shi.bean.User;
 
 public class OrderResultMap {
-    int id;
-    int user_id;
-    String number;
-    String note;
-    User user;
+    int ID;
+    int userID;
+    String mNumber;
+    String mNote;
+    User mUser;
 
-    public int getId() {
-        return id;
+    public int getID() {
+        return ID;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setID(int ID) {
+        this.ID = ID;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserID() {
+        return userID;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserID(int userID) {
+        this.userID = userID;
     }
 
-    public String getNumber() {
-        return number;
+    public String getmNumber() {
+        return mNumber;
     }
 
-    public void setNumber(String number) {
-        this.number = number;
+    public void setmNumber(String mNumber) {
+        this.mNumber = mNumber;
     }
 
-    public String getNote() {
-        return note;
+    public String getmNote() {
+        return mNote;
     }
 
-    public void setNote(String note) {
-        this.note = note;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + user.toString();
+    public void setmNote(String mNote) {
+        this.mNote = mNote;
     }
 }
