@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface UserMapperI {
     public int updateUser(User user);
-    public List<User> findUserById(int id);
+    public User findUserById(int id);
 }
 
 

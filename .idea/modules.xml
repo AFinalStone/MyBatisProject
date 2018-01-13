@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/01ResultType_ResultMap/01ResultType_ResultMap.iml" filepath="$PROJECT_DIR$/01ResultType_ResultMap/01ResultType_ResultMap.iml" />
       <module fileurl="file://$PROJECT_DIR$/02延时加载/02延时加载.iml" filepath="$PROJECT_DIR$/02延时加载/02延时加载.iml" />
       <module fileurl="file://$PROJECT_DIR$/03Sqlsession和Mapper的缓存/03Sqlsession和Mapper的缓存.iml" filepath="$PROJECT_DIR$/03Sqlsession和Mapper的缓存/03Sqlsession和Mapper的缓存.iml" />
+      <module fileurl="file://$PROJECT_DIR$/04Spring和Mybatis整合/04Spring和Mybatis整合.iml" filepath="$PROJECT_DIR$/04Spring和Mybatis整合/04Spring和Mybatis整合.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/BatisProject.iml" filepath="$PROJECT_DIR$/.idea/BatisProject.iml" />
     </modules>
   </component>

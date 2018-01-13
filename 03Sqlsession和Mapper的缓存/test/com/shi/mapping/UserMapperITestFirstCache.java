@@ -9,7 +9,10 @@ import org.junit.Test;
 
 import java.util.List;
 
-public class UserMapperITest {
+/**
+ * 测试一级缓存
+ * */
+public class UserMapperITestFirstCache {
 
     SqlSession sqlSession;
 
@@ -27,25 +30,24 @@ public class UserMapperITest {
     public void testCache() {
         //这里初次请求从数据库获取数据，并把数据插入到sqlSession的缓存中
         UserMapperI userMapperI = sqlSession.getMapper(UserMapperI.class);
-        List<User> listData = userMapperI.findUserById(2);
-        for (User user : listData) {
-            user.toString();
-        }
+        User mUser = userMapperI.findUserById(2);
+        System.out.println(mUser.toString());
         //由于之前的请求把数据插入到了缓存中，这里从缓存中获取数据
-        List<User> listData2 = userMapperI.findUserById(2);
+        User mUser2 = userMapperI.findUserById(2);
+        System.out.println("第二次："+mUser2.toString());
+
     }
 
     @Test
     public void testCacheByCommit() {
         //这里初次请求从数据库获取数据，并把数据插入到sqlSession的缓存中
         UserMapperI userMapperI = sqlSession.getMapper(UserMapperI.class);
-        List<User> listData = userMapperI.findUserById(2);
-        for (User user : listData) {
-            user.toString();
-        }
+        User mUser = userMapperI.findUserById(2);
+        System.out.println(mUser.toString());
         //这里主动调用sqlSession的commit方法，清空当前sqlSession的缓存
         sqlSession.commit();
         //由于调用了commit清空了数据缓存，这里请求的数据是从数据库获取的
-        List<User> listData2 = userMapperI.findUserById(2);
+        User mUser2 = userMapperI.findUserById(2);
+        System.out.println("第二次"+mUser2.toString());
     }
 }

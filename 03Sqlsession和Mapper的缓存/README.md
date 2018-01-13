@@ -1,147 +1,167 @@
-### 查询缓存：
- mybatis提供查询缓存，用于减轻数据压力，提高数据库性能。
- mybatis提供一级缓存和二级缓存
- 
- ![缓存关系图](pic/1.png)
- 
- 1、一级缓存是sqlSession级别的缓存。在操作数据库时需要构造sqlSession对象，在对象中有一个数据结构（HashMap）
- 用于存储缓存数据。不同的sqlSession之间缓存数据区域（HashMap）是互不影响的。
- 
- 2、二级缓存是mapper级别的缓存，多个sqlSession去操作同一个Mapper的sql语句，多个SqlSession可以共用二级缓存，
- 二级缓存是跨SqlSession的。
- 
- 为什么要用缓存？如果缓存中有数据就不需要从数据库中获取，大大提高系统性能。
- 
- ### 一级缓存
- 
- 一级缓存区域是根据SqlSession为单位划分的。每次查询先从缓存区域找，如果找不到从数据库查询，查询到数据将数据写入缓存。
- MyBatis内部存储缓存使用一个HashMap，key为hashCode+sqlId+Sql语句。value为从查询出映射生成的java对象
- 
- 举例说明：
- 
- 下图是根据id查询用户的一级缓存图解：
- 
-  ![一级缓存原理图](pic/2.png)
- 
- 
-第一次发起查询用户id为1的用户信息，先去找缓存中是否有id为1的用户信息，如果没有，从数据库查询用户信息。
-得到用户信息，将用户信息存储到一级缓存中。
+#### 什么是延迟加载 
 
-如果sqlSession去执行commit操作（执行插入，更新，删除），清空SqlSession中的一级缓存，这样做的目的是为了让缓存中
-存储的是最新信息，避免脏读。
+resultMap中的association和collection标签具有延迟加载的功能。
 
-第二次发起查询用户id为1的用户信息，先去找缓存中是否有id为1的用户信息，缓存中有，直接从缓存中获取用户信息。
+延迟加载的意思是说，在关联查询时，利用延迟加载，先加载主信息。使用关联信息时再去加载关联信息。
 
 
-### 一级缓存测试
-  
-mybatis默认支持以及缓存，不需要在配置文件中去配置
+#### 设置延迟加载
 
+需要在SqlMapConfig.xml文件中，在<settings>标签中设置下延迟加载。
+
+lazyLoadingEnabled、aggressiveLazyLoading
+
+|   设置项      | 描述          | 允许值  |  默认值|
+| ------------- |:-------------:| -----:| -----:|
+| lazyLoadingEnabled | 全局性设置懒加载。如果设为‘false’，则所有相关联的都会被初始化加载。/true | false| false |
+| aggressiveLazyLoading | 当设置为‘true’的时候，懒加载的对象可能被任何懒属性全部加载。否则，每个属性都按需加载。/true | false| false |
+
+```xml
+<!-- 开启延迟加载 -->
+<settings>
+    <!-- lazyLoadingEnabled:延迟加载启动，默认是false -->
+    <setting name="lazyLoadingEnabled" value="true"/>
+    <!-- aggressiveLazyLoading：积极的懒加载，false的话按需加载，默认是true -->
+    <setting name="aggressiveLazyLoading" value="false"/>
+     
+    <!-- 开启二级缓存，默认是false -->
+    <setting name="cacheEnabled" value="true"/>
+</settings>
+```
+#### 什么是查询缓存
+
+- Mybatis的一级缓存
+
+是指SqlSession。一级缓存的作用域是一个SqlSession。Mybatis默认开启一级缓存。
+在同一个SqlSession中，执行相同的查询SQL，第一次会去查询数据库，并写到缓存中；第二次直接从缓存中取。当执行SQL时两次查询中间发生了增删改操作，则SqlSession的缓存清空。
+
+
+- Mybatis的二级缓存
+
+是指mapper映射文件。二级缓存的作用域是同一个namespace下的mapper映射文件内容，多个SqlSession共享。Mybatis需要手动设置启动二级缓存。
+在同一个namespace下的mapper文件中，执行相同的查询SQL，第一次会去查询数据库，并写到缓存中；第二次直接从缓存中取。当执行SQL时两次查询中间发生了增删改操作，则二级缓存清空。
+
+- 一级缓存原理
+
+![原理图](pic/01一级缓存原理图.jpg)
+
+ 一级缓存区域是根据SqlSession为单位划分的。
+ 每次查询会先去缓存中找，如果找不到，再去数据库查询，然后把结果写到缓存中。Mybatis的内部缓存使用一个HashMap，key为hashcode+statementId+sql语句。Value为查询出来的结果集映射成的java对象。
+ SqlSession执行insert、update、delete等操作commit后会清空该SQLSession缓存。
+ 
+- 二级缓存原理
+
+![原理图](pic/02二级缓存原理图.jpg)
+ 
+ 二级缓存是mapper级别的。Mybatis默认是没有开启二级缓存。
+ 
+ 第一次调用mapper下的SQL去查询用户信息。查询到的信息会存到该mapper对应的二级缓存区域内。
+ 第二次调用相同namespace下的mapper映射文件中相同的SQL去查询用户信息。会去对应的二级缓存内取结果。
+ 如果调用相同namespace下的mapper映射文件中的增删改SQL，并执行了commit操作。此时会清空该namespace下的二级缓存。
+ 
+#### 开启二级缓存
+1、在核心配置文件SqlMapConfig.xml中加入以下内容（开启二级缓存总开关）：
+cacheEnabled设置为 true
+
+ ![开启二级缓存](pic/03配置开启二级缓存.jpg)
+ 
+2、在映射文件中，加入以下内容，开启二级缓存：
+ 
+ ![开启二级缓存](pic/04映射文件开启二级缓存.jpg)
+ 
+#### 实现序列化
+
+ 由于二级缓存的数据不一定都是存储到内存中，它的存储介质多种多样，所以需要给缓存的对象执行序列化。
+ 如果该类存在父类，那么父类也要实现序列化。
+
+![序列化](pic/05序列化.jpg)
+
+#### 禁用二级缓存
+ 
+该statement中设置userCache=false可以禁用当前select语句的二级缓存，即每次查询都是去数据库中查询，默认情况下是true，即该statement使用二级缓存。
+ 
+ ![序列化](pic/06禁用二级缓存.jpg)
+ 
+ #### 刷新二级缓存
+ 
+  ![刷新二级缓存](pic/07刷新二级缓存.jpg)
+ 
+
+#### 分布式缓存
+
+- mybatis整合ehcache
+
+ehcache是一个分布式缓存框架。
+
+- 我们系统为了提高系统并发，性能、一般对系统进行分布式部署（集群部署方式）
+
+![分布式](pic/08分布式缓存.png)
+
+不使用分布式缓存，缓存的数据在各个服务器单独存储，不方便系统开发。所以要使用分布式缓存对缓存数据进行集中管理。
+mybatis无法实现分布式缓存，需要和其他分布式缓存框架进行整合。
+ 
+ mybatis提供了一个cache接口，如果要实现自己的缓存逻辑，实现cache接口开发即可。
+ mybatis和ehcache整合，mybatis和ehcache整合包中提供了一个cache接口的实现类。
+ 
  ```java
- public class UserMapperITest {
- 
-     SqlSession sqlSession;
- 
-     @Before
-     public void setUp() throws Exception {
-         sqlSession = MyBatisUtil.getSqlSession();
-     }
- 
-     @After
-     public void tearDown() throws Exception {
-         sqlSession.close();
-     }
- 
-     @Test
-     public void testCache() {
-         //这里初次请求从数据库获取数据，并把数据插入到sqlSession的缓存中
-         UserMapperI userMapperI = sqlSession.getMapper(UserMapperI.class);
-         List<User> listData = userMapperI.findUserById(2);
-         for (User user : listData) {
-             user.toString();
-         }
-         //由于之前的请求把数据插入到了缓存中，这里从缓存中获取数据
-         List<User> listData2 = userMapperI.findUserById(2);
-     }
- 
-     @Test
-     public void testCacheByCommit() {
-         //这里初次请求从数据库获取数据，并把数据插入到sqlSession的缓存中
-         UserMapperI userMapperI = sqlSession.getMapper(UserMapperI.class);
-         List<User> listData = userMapperI.findUserById(2);
-         for (User user : listData) {
-             user.toString();
-         }
-         //这里主动调用sqlSession的commit方法，清空当前sqlSession的缓存
-         sqlSession.commit();
-         //由于调用了commit清空了数据缓存，这里请求的数据是从数据库获取的
-         List<User> listData2 = userMapperI.findUserById(2);
-     }
- }
+public interface Cache {
+    String getId();
 
+    void putObject(Object var1, Object var2);
+
+    Object getObject(Object var1);
+
+    Object removeObject(Object var1);
+
+    void clear();
+
+    int getSize();
+
+    ReadWriteLock getReadWriteLock();
+}
+```
+mybatis默认实现的cache是org.apache.ibatis.cache.impl.PerpetualCache类
+
+- 加入ehcache包，整合ehcache相关jar包
+
+ehcache-core-2.6.8.jar
+mybatis-ehcache-1.0.3.jar
+slf4j-api-1.6.1.jar
+
+配置mapper中cache中的type为cache接口的实现类型。
+
+```xml
+<mapper namespace="com.shi.mapping.UserMapperI">
+
+    <!--开启本Mapper的namespace下的二级缓存
+     type：指定cache接口的实现类的类型，mybatis默认使用PerpetualCache，要和ehcache整合，
+     如果要整合其他第三方缓存框架，需要配置type为ehcache实现cache接口的类型
+    -->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+
+</mapper>
 ```
 
-正式开发，是将mybatis和spring进行整合开发，事务控制在service中。一个service方法中包括很多mapper方法调用。
-一个service方法中包括了很多mappper方法调用。
-service{
-    //开始执行时，开启事务，创建sqlSession对象
-    //第一次调用mapper的方法findUserById(1)
-    
-   //第二次调用mapper的方法findUserById(1)，从一级缓存中获取数据
-   //方法结束，sqlSession关闭
-}
-**如果是执行两次Service调用查询相同的用户信息，不走一级缓存，因为session方法结束，sqlSession就关闭，一级缓存就清空。**
+加入eache的配置文件：
+
+![eache的配置文件](pic/09eache培配置文件.png)
+
+#### 二级缓存应用场景：
+
+对于访问多的查询请求且用户对查询结果实时性要求不高，此时可采用mybatis二级缓存技术降低
+数据库访问量，提高访问速度，业务场景如：耗时较高的统计分析sql、电话账单查询sql等、
+实现方法如下：通过设置刷新间隔时间，由mybatis每隔一段时间自动清空缓存，根据数据变化频率设置
+刷新间隔flushInterval,比如设置为30分钟、60分钟、24小时等，根据需要而定
+
+#### 二级缓存局限性
+
+mybatis二级缓存对细粒度的数据级别的缓存实现不好，比如如下需求：对商品信心进行缓存，由于商品信息
+查询访问量大，但是要求用户每次都能查询最新的商品信息，此时如果使用mybatis的二级缓存就无法实现当一个
+商品变化时只刷新该商品的缓存信息而不刷心其他商品的信息，因为mybatis的二级缓存区域以mapper为单位划分，当
+一个商品信息变化会将所有商品信息的缓存数据全部清空。解决此类问题需要在业务层根据需求对数据有
+针对性缓存
 
 
- ### 二级缓存
- 
- ![原理](pic/3.png)
- 
- 首先开启mybatis的二级缓存。
- 
- sqlSession1去查询用户id为1的用户信息，查询到用户信息会将查询数据存储到二级缓存中。
- 
- 如果sqlSession3去执行相同mapper下sql，执行commit提交，清空该mapper下的二级缓存区域的数据。
- 
- sqlSession2去查询用户id为1的用户信息，去缓存中找是否存在数据，如果存在直接从缓存中去除数据。
- 
- 二级缓存与一级缓存区别，二级缓存范围更大，多个sqlSession可以共享一个UserMapper的二级缓存区域。
- UserMpper有一个二级缓存区域（按namespace分），其他mapper也有自己的二级缓存区域。
- 每一个namespace的mapper都有一个二级缓存区域，两个mapper的namespace如果相同，这两个mapper执行sql查询
- 到数据将存在相同的二级缓存区域中。
- 
- 
- 1、开启二级缓存
- 
- mybatis的二级缓存是mapper范围级别，除了在sqlMapConfig.xml设置二级缓存的总关系，还要在具体的mapper.xml中开启二级缓存。
- 
- 在核心配置文件SqlMapConfig.xml中加入<setting name="cacheEnabled" value="true"/>
- 
-|         | 描述          | 允许值  |  默认值|
-| ------------- |:-------------:| -----:| -----:|
-| cacheEnabled | 对在此配置文件下的所有cache进行全局性开/关设置| true/false| true |
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+
+
  
