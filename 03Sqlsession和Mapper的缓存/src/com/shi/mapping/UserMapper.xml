@@ -2,6 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shi.mapping.UserMapperI">
 
+    <!--开启本Mapper的namespace下的二级缓存
+     type：指定cache接口的实现类的类型，mybatis默认使用PerpetualCache，要和ehcache整合，
+     如果要整合其他第三方缓存框架，需要配置type为ehcache实现cache接口的类型
+    -->
+    <cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
 
     <select id="findUserById" parameterType="int" resultType="com.shi.bean.User">
         select * from user where id = #{value}

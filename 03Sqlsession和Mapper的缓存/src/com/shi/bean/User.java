@@ -1,10 +1,13 @@
 package com.shi.bean;
 
+import java.io.Serializable;
+
 /**
  * @author AfinalStone
  * users表所对应的实体类
  */
-public class User {
+public class User implements Serializable{
+    private static final long serialVersionUID = -8143828116053212870L;
     //实体类的属性和表的字段名称一一对应
     private int id;
     private String userName;
