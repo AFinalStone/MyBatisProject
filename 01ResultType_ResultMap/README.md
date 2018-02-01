@@ -1,5 +1,11 @@
  ### 创建我们需要的数据库表结构：
  
+设置客户端编码
+
+ ```sql
+set character_set_client=utf8;
+```
+ 
  1、创建用户user表：
  
 ```sql
@@ -59,7 +65,7 @@ INSERT INTO `userAndOrders`.`orders` ( `user_id`,`number`,`createtime`,`note`) V
 
 ```sql
 CREATE TABLE `userAndOrders`.`order_detail`(  
-  `id` INT(11) NOT NULL,
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
   `orders_id` INT(11) NOT NULL COMMENT '订单id',
   `item_id` INT(11) NOT NULL COMMENT '商品id',
   `item_num` INT(11) COMMENT '商品购买数量',

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.shi.mapping.UserMapperI">
+<mapper namespace="com.shi.mapping.OrderCustomI">
 
     <!--订单信息加用户信息-->
     <resultMap id="OrderUserlazyLoadingResultMap" type="com.shi.pojo.OrderResultMap">
@@ -18,7 +18,7 @@
             FROM orders
         -->
         <!--用户信息-->
-        <association property="mUser" javaType="com.shi.bean.User" select="com.shi.mapping.UserMapperI.findUserById" column="user_id">
+        <association property="mUser" javaType="com.shi.bean.User" select="com.shi.mapping.OrderCustomI.findUserById" column="user_id">
 
         </association>
     </resultMap>

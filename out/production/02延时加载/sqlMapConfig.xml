@@ -7,7 +7,7 @@
 
     <settings>
         <!--是否开启懒加载-->
-        <setting name="lazyLoadingEnabled" value="false"/>
+        <setting name="lazyLoadingEnabled" value="true"/>
         <!--是否开启积极加载-->
         <setting name="aggressiveLazyLoading" value="false"/>
     </settings>
